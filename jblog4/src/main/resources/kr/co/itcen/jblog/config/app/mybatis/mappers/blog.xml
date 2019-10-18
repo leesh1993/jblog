@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog">
+
+
+	<insert id="insert" parameterType="uservo">
+		<![CDATA[
+		insert
+		  into blog
+		values (#{id}, CONCAT(#{name }, '님의 블로그'), '/images/logo/spring-logo.jpg')
+		]]>
+	</insert>
+
+	<select id="getBlog" parameterType="string" resultType="blogvo">
+		<![CDATA[
+		select b.uid, b.title, b.logo
+		  from blog b, user u
+		 where u.id = b.uid
+		   and uid  = #{uid }	
+		]]>
+	</select>
+
+	<update id="blogUpdate" parameterType="map">
+	<![CDATA[
+	update blog 
+	   set title = #{title} 
+	 where uid = #{uid}
+	]]>
+	</update>
+	
+	<update id="logoUpdate" parameterType="map">
+	<![CDATA[
+	update blog 
+	   set logo = #{logo} 
+	 where uid = #{uid}
+	]]>
+	</update>
+		
+	<insert id="upload" parameterType="fileuploadvo">
+		<![CDATA[
+		 insert 
+		 into fileupload 
+		 values(null, #{original_name}, #{save_name}, now(), #{bid}, 'y')
+		]]>
+	</insert>
+
+	<select id="getFile" parameterType="string"
+		resultType="fileuploadvo">
+	<![CDATA[
+	 select no
+	 	  , bid
+	      , original_name
+	      , save_name
+       from fileupload 
+	  where bid = #{bid}
+	    and status = 'Y'
+	]]>
+	</select>
+
+</mapper>

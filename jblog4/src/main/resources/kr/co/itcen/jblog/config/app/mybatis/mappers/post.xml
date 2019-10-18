@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="post">
+
+	<insert id="insert" parameterType="map">
+		<![CDATA[
+		insert
+		  into post
+		values(null,#{title },#{contents },now(),#{cno },(SELECT IFNULL(MAX(p.pno) + 1, 1) from post p where p.cno = #{cno }),'Y')
+		]]>
+	</insert>
+	
+	<select id="getPostList" parameterType="int" resultType="postvo">
+	<![CDATA[
+	select p.no
+	     , p.title
+	     , p.text
+	     , date_format(p.wdate,'%Y-%m-%d %h:%i:%s') as wdate
+	     , p.cno
+	     , p.pno
+	  from post p, category c
+	 where p.cno  = c.no
+	   and p.cno  = #{cno }
+	   and p.status = 'Y'
+	order by  wdate asc
+	]]>
+	</select>
+	
+	<select id="getSelectedPost" parameterType="map" resultType="postvo">
+	<![CDATA[
+	select p.no
+	     , p.title
+	     , p.text
+	     , date_format(p.wdate,'%Y-%m-%d %h:%i:%s') as wdate
+	     , p.cno
+	     , p.pno
+	  from post p, category c
+	 where p.cno = c.no
+	   and p.cno = #{cno }
+	   and p.pno = #{pno }
+	   and p.status = 'Y'
+	]]>
+	
+	</select>
+		
+</mapper>
